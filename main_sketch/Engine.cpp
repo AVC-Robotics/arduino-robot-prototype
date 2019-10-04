@@ -26,19 +26,24 @@ void Engine::setSpeed(int s) {
     if (s >= 0 && s <= 90) {
 
         // The servo motor reads values from 0-180. 0 and 180 are the
-        // the fastest speeds backwards and forwards, respectively, with 0
+        // the fastest speeds backwards and forwards, respectively, with 90
         // being stopped.
+        
         // Here, we will just read a speed from 0-90 and use the
-        // direction member variable to determine which direction to go
+        // currentDirection member variable to determine which direction to go
+        
+        // Note that the motors turn in opposite directions when mounted
+        // on the chassis, so we account for that here by turning the 
+        // left motor "backwards" so that it matches with the right motor
 
         switch (currentDirection) {
             case FORWARD:
-            leftMotor.write(s + 90);
-            rightMotor.write(s + 90);
+            leftMotor.write(90 - s); // left motor is reverse of right motor
+            rightMotor.write(90 + s);
             break;
             case BACKWARD:
-            leftMotor.write(s);
-            rightMotor.write(s);
+            leftMotor.write(90 + s); // left motor is reverse of right motor
+            rightMotor.write(90 - s);
             break;
         }
     }
@@ -75,11 +80,11 @@ void Engine::go(DirectionState d, int s) {
 }
 
 
-// robot rotates right in place
+// robot rotates right in place at a predefined speed
 void Engine::rotateRight() {
     stop();
-    rightMotor.write(ROTATE_SPEED);
-    leftMotor.write(ROTATE_SPEED + 90);
+    rightMotor.write(90 + ROTATE_SPEED); // forwards
+    leftMotor.write(90 + ROTATE_SPEED); // backwards
     go();
 }
 
@@ -87,8 +92,8 @@ void Engine::rotateRight() {
 // robot rotates right in place
 void Engine::rotateLeft() {
     stop();
-    rightMotor.write(ROTATE_SPEED);
-    leftMotor.write(ROTATE_SPEED + 90);
+    rightMotor.write(90 - ROTATE_SPEED); // backwards
+    leftMotor.write(90 - ROTATE_SPEED); // forwards
     go(); // continue as before
 }
 
