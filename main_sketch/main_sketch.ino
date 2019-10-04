@@ -1,9 +1,21 @@
 #include "Engine.h"
+#include "Sensor.h"
+
+Engine engine = Engine(9,10);
+Sensor sensor = Sensor(11,12);
 
 void setup() {
-  Engine e = Engine(9,10);
+  Engine engine = Engine(9,10);
+  Sensor sensor = Sensor(11,12);
+
+  engine.go(FORWARD, 10);
 }
 
 void loop() {
-   // no code yet
+   if (sensor.getDistance() < 100.0) {
+       engine.stop();
+   }
+   else {
+       engine.go();
+   }
 }
