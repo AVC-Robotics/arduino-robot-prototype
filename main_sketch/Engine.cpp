@@ -6,10 +6,6 @@
 
 // see Engine.h for member variables
 
-////////////
-// PUBLIC //
-////////////
-
 // CONSTRUCTOR
 Engine::Engine(int leftMotorPin, int rightMotorPin) {
     // set up motors
@@ -22,6 +18,8 @@ Engine::Engine(int leftMotorPin, int rightMotorPin) {
     savedSpeed = 0;
 }
 
+
+// MEMBER FUNCTIONS
 
 // set angular speed
 void Engine::setSpeed(int s) {
