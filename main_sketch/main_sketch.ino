@@ -1,14 +1,13 @@
 #include "Engine.h"
 #include "Sensor.h"
 
-Engine engine = Engine(9,10);
-Sensor sensor = Sensor(11,12);
+// Engine engine = Engine(7,8);
+//Sensor sensor = Sensor(12,13);
 
 void setup() {
-  Engine engine = Engine(9,10);
-  engine.go(FORWARD, 45);
+
 }
 
 void loop() {
-  
+
 }
