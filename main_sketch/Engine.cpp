@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include <Arduino.h>
 
 // Engine
 // This class models the robot's left and right continuous servo motors,
@@ -143,24 +144,24 @@ void Engine::saveSpeed() {
 // robot rotates right in place at a predefined speed
 void Engine::rotateRight() {
     double arcLength = CHASSIS_WIDTH * PI / 2.0; // arc length wheels will travel
-    double deltaTime = arcLength / getVelocityForSpeed(ROTATE_RPM);
+    double deltaTime = arcLength / getVelocityForSpeed(ROTATE_SPEED);
     timeTurnCompleted = millis() + (unsigned long)deltaTime;
 
     turningState = ROTATING_RIGHT;
-    rightMotor.write(90 + ROTATE_RPM); // forwards
-    leftMotor.write(90 + ROTATE_RPM); // backwards
+    rightMotor.write(90 + ROTATE_SPEED); // forwards
+    leftMotor.write(90 + ROTATE_SPEED); // backwards
 }
 
 
 // robot rotates right in place
 void Engine::rotateLeft() {
     double arcLength = CHASSIS_WIDTH * PI / 2.0; // arc length wheels will travel
-    double deltaTime = arcLength / getVelocityForSpeed(ROTATE_RPM);
+    double deltaTime = arcLength / getVelocityForSpeed(ROTATE_SPEED);
     timeTurnCompleted = millis() + (unsigned long)deltaTime;
 
     turningState = ROTATING_LEFT;
-    rightMotor.write(90 - ROTATE_RPM); // backwards
-    leftMotor.write(90 - ROTATE_RPM); // forwards
+    rightMotor.write(90 - ROTATE_SPEED); // backwards
+    leftMotor.write(90 - ROTATE_SPEED); // forwards
 }
 
 
@@ -172,9 +173,9 @@ void Engine::rotateLeft() {
 
 
 // called by update function to get latest distance
-void Engine::updateDistanceTraveled(unsigned long deltaTime)) {
+void Engine::updateDistanceTraveled(unsigned long deltaTime) {
     // linear_velocity = radius * angular_velocity
-    distanceTraveled = WHEEL_RADIUS * LOADED_ANG_VEL * deltaTime;
+    distanceTraveled = WHEEL_RADIUS * LOADED_MAX_RPM * deltaTime;
 }
 
 
@@ -191,7 +192,7 @@ void Engine::getDistanceTraveled() {
 
 
 // return a linear velocity for a given speed
-double getVelocityForSpeed(int s) {
+double Engine::getVelocityForSpeed(int s) {
     // convert speed to rpm
     double rpm = (double)(map(s, 0, 90, 0, LOADED_MAX_RPM));
     // convert rpm to velocity

@@ -14,7 +14,7 @@ enum TurningState {
     TURNING_RIGHT,
     TURNING_LEFT,
     NOT_TURNING
-}
+};
 
 
 class Engine {
@@ -30,13 +30,12 @@ private:
     unsigned long timeSinceLastUpdate;
 
     // constants (settings)
-    const double ROTATE_RPM = 45; // motor speed (0-90) for rotating the robot
+    const int ROTATE_SPEED = 45; // motor speed (0-90) for rotating the robot
 
     // constants (experimentally determined)
     const double LOADED_MAX_RPM = 113; // loaded angular velocity - 113 is no-load rpm @ 5V
     const double WHEEL_RADIUS = 1; // in cm
     const double CHASSIS_WIDTH = 4; // in cm
-    const double PI = 3.1415;
 
 public:
     Engine(int leftMotorPin, int rightMotorPin);
