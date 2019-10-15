@@ -142,8 +142,9 @@ void Engine::saveSpeed() {
 
 
 // robot rotates right in place at a predefined speed
-void Engine::rotateRight() {
-    double arcLength = CHASSIS_WIDTH * PI / 2.0; // arc length wheels will travel
+void Engine::rotateRight(double degrees) {
+    double radians = degrees * PI / 180.0;
+    double arcLength = CHASSIS_WIDTH / 2.0 * radians; // arc length wheels will travel
     double deltaTime = arcLength / getVelocityForSpeed(ROTATE_SPEED);
     timeTurnCompleted = millis() + (unsigned long)deltaTime;
 
@@ -154,8 +155,9 @@ void Engine::rotateRight() {
 
 
 // robot rotates right in place
-void Engine::rotateLeft() {
-    double arcLength = CHASSIS_WIDTH * PI / 2.0; // arc length wheels will travel
+void Engine::rotateLeft(double degrees) {
+    double radians = degrees * PI / 180.0;
+    double arcLength = CHASSIS_WIDTH / 2.0 * radians; // arc length wheels will travel
     double deltaTime = arcLength / getVelocityForSpeed(ROTATE_SPEED);
     timeTurnCompleted = millis() + (unsigned long)deltaTime;
 
