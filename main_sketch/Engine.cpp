@@ -78,8 +78,6 @@ boolean Engine::isTurning() {
 
 
 
-
-
 ///////////////////////
 // MOVEMENT COMMANDS //
 ///////////////////////
