@@ -59,10 +59,28 @@ void Engine::update() {
 
 
 
+//////////////////////
+// MOVEMENT GETTERS //
+//////////////////////
 
-////////////////////////
-// MOVEMENT FUNCTIONS //
-////////////////////////
+
+// engine is stopped
+boolean Engine::isStopped() {
+    return (currentSpeed == 0) ? true : false;
+}
+
+
+// engine is turning
+boolean Engine::isTurning() {
+    return (turningState != NOT_TURNING) ? true : false;
+}
+
+
+
+
+///////////////////////
+// MOVEMENT COMMANDS //
+///////////////////////
 
 
 // set angular speed
@@ -136,9 +154,9 @@ void Engine::saveSpeed() {
 
 
 
-///////////////////////////
-// ROTATE/TURN FUNCTIONS //
-///////////////////////////
+//////////////////////////
+// ROTATE/TURN COMMANDS //
+//////////////////////////
 
 
 // robot rotates right in place at a predefined speed

@@ -5,7 +5,7 @@
 
 enum DirectionState {
     FORWARD,
-    BACKWARD,
+    BACKWARD
 };
 
 enum TurningState {
@@ -42,7 +42,11 @@ public:
 
     void update();
 
-    // movement
+    // movements getters
+    boolean isStopped();
+    boolean isTurning();
+
+    // movement commands
     void setSpeed(int s);
     void setDirection(DirectionState d);
     void stop();
@@ -50,7 +54,7 @@ public:
     void go(DirectionState d, int s);
     void saveSpeed();
 
-    // turning
+    // turning commands
     void rotateRight();
     void rotateLeft();
 
