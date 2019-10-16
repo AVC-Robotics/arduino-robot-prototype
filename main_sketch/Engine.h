@@ -5,7 +5,7 @@
 
 enum DirectionState {
     FORWARD,
-    BACKWARD,
+    BACKWARD
 };
 
 enum TurningState {
