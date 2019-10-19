@@ -1,4 +1,5 @@
 TODO
 
-- sensor code
-- turning function with angle argument (current function just keeps rotating robot indefinitely
+- distance tracking calibration
+    -> check distanceTraveled from RPMs against ultrasonic sensor
+    -> also do with accelerometer? (ADXL335)
