@@ -9,7 +9,12 @@
 
 
 // CONSTRUCTOR
-Engine::Engine(int leftMotorPin, int rightMotorPin) {
+Engine::Engine() {
+
+}
+
+
+void Engine::initialize(int leftMotorPin, int rightMotorPin) {
     // set up motors
     leftMotor.attach(leftMotorPin);
     rightMotor.attach(rightMotorPin);
@@ -59,20 +64,30 @@ void Engine::update() {
 
 
 
-//////////////////////
-// MOVEMENT GETTERS //
-//////////////////////
+/////////////////////
+// STATE FUNCTIONS //
+/////////////////////
 
 
 // engine is stopped
 boolean Engine::isStopped() {
-    return (currentSpeed == 0) ? true : false;
+    if (currentSpeed == 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
 }
 
 
 // engine is turning
 boolean Engine::isTurning() {
-    return (turningState != NOT_TURNING) ? true : false;
+    if (turningState != NOT_TURNING) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 
@@ -86,8 +101,6 @@ boolean Engine::isTurning() {
 // set angular speed
 void Engine::setSpeed(int s) {
     if (s >= 0 && s <= 90) {
-        turningState = NOT_TURNING;
-
         // The servo motor reads values from 0-180. 0 and 180 are the
         // the fastest speeds backwards and forwards, respectively, with 90
         // being stopped.
@@ -98,6 +111,9 @@ void Engine::setSpeed(int s) {
         // Note that the motors turn in opposite directions when mounted
         // on the chassis, so we account for that here by turning the
         // left motor "backwards" so that it matches with the right motor
+
+        turningState = NOT_TURNING;
+        currentSpeed = s;
 
         switch (currentDirection) {
 
@@ -194,8 +210,8 @@ void Engine::rotateLeft(double degrees) {
 
 // called by update function to get latest distance
 void Engine::updateDistanceTraveled(unsigned long deltaTime) {
-    // linear_velocity = radius * angular_velocity
-    distanceTraveled = WHEEL_RADIUS * LOADED_MAX_RPM * deltaTime;
+    // deltaD = v*deltaT
+    distanceTraveled += getVelocityForSpeed(currentSpeed) * deltaTime;
 }
 
 
@@ -206,16 +222,17 @@ void Engine::resetDistanceTraveled() {
 
 
 // return distance traveled since last reset
-void Engine::getDistanceTraveled() {
+double Engine::getDistanceTraveled() {
     return distanceTraveled;
 }
 
 
-// return a linear velocity for a given speed
+// return a linear velocity (cm/s) for a given speed
 double Engine::getVelocityForSpeed(int s) {
     // convert speed to rpm
     double rpm = (double)(map(s, 0, 90, 0, LOADED_MAX_RPM));
-    // convert rpm to velocity
-    double velocity = rpm * 360.0 / 60.0;
+    // convert rotations per minute to radians per second
+    double rps = 2.0 * rpm * PI / 60.0;
+    double velocity = rps * WHEEL_RADIUS;
     return velocity;
 }

@@ -1,7 +1,9 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <Arduino.h>
 #include <Servo.h>
+
 
 enum DirectionState {
     FORWARD,
@@ -23,7 +25,7 @@ private:
     TurningState turningState;
     int currentSpeed;
     int savedSpeed;
-    int distanceTraveled;
+    double distanceTraveled;
     Servo leftMotor;
     Servo rightMotor;
     unsigned long timeTurnCompleted;
@@ -38,11 +40,13 @@ private:
     const double CHASSIS_WIDTH = 4; // in cm
 
 public:
-    Engine(int leftMotorPin, int rightMotorPin);
+    Engine();
+
+    void initialize(int leftMotorPin, int rightMotorPin);
 
     void update();
 
-    // movements getters
+    // state functions
     boolean isStopped();
     boolean isTurning();
 
@@ -55,13 +59,13 @@ public:
     void saveSpeed();
 
     // turning commands
-    void rotateRight();
-    void rotateLeft();
+    void rotateRight(double degrees);
+    void rotateLeft(double degrees);
 
     // distance tracking
     void updateDistanceTraveled(unsigned long deltaTime);
     void resetDistanceTraveled();
-    void getDistanceTraveled();
+    double getDistanceTraveled();
     double getVelocityForSpeed(int s);
 
 };
