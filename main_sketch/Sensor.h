@@ -4,11 +4,13 @@
 
 class Sensor {
 private:
-    int triggerPin;
+    int trigPin;
     int echoPin;
 
 public:
-    Sensor(int triggerPin, int echoPin);
+    Sensor();
+
+    void initialize(int trigPin, int echoPin);
 
     double getDistance();
 };
