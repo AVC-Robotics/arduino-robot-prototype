@@ -1,21 +1,28 @@
 #include "Engine.h"
 #include "Sensor.h"
 
-Engine engine = Engine(7,8); // left,right
-Sensor sensor = Sensor(12,13); // trig,echo
+#include <Servo.h>
+
+Engine engine = Engine();
+Sensor sensor = Sensor();
 
 void setup() {
-    engine.go(FORWARD, 50);
+    Serial.begin(9600);
+    engine.initialize(7,8); // left,right
+    sensor.initialize(12,13); // trig,echo
+    engine.go(FORWARD, 45);
 }
 
 void loop() {
+    engine.update();
+
+    // stop when obstacle detected
     if (engine.isStopped()) {
         if (sensor.getDistance() > 10.0) {
             engine.go(); // return to previous speed
         }
     }
-    else if (!engine.isStopped && sensor.getDistance() < 10.0) {
+    else if (!engine.isStopped() && sensor.getDistance() < 10.0) {
         engine.stop();
-        engine.rotateRight(90);
     }
 }
