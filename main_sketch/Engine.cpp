@@ -7,6 +7,12 @@
 // see Engine.h for member variables
 
 
+/*
+KNOWN BUGS
+-> correction functions could set speed of a wheel above 90
+*/
+
+
 // CONSTRUCTOR
 Engine::Engine() {
 
@@ -19,7 +25,7 @@ void Engine::initialize(int leftMotorPin, int rightMotorPin) {
     rightMotor.attach(rightMotorPin);
 
     // set default values
-    currentDirection = FORWARD;
+    directionState = FORWARD;
     turningState = NOT_TURNING;
     currentSpeed = 0;
     savedSpeed = 0;
@@ -36,27 +42,53 @@ void Engine::initialize(int leftMotorPin, int rightMotorPin) {
 // The update function is called by the loop() function in main. This updates
 // anything that depends on time.
 void Engine::update() {
+    // place all other update functions here so curTime is as accurate as possible
+    gyro.update();
+
     unsigned long curTime = millis(); // get current time in MS
     unsigned long deltaTime = curTime - timeSinceLastUpdate;
 
     // update distance
     switch (turningState) {
         case NOT_TURNING:
-        updateDistanceTraveled(deltaTime);
+
+        // AUTO-CORRECTION
+        // turning to the right
+        if (gyro.getZ() > stableAngle + STABLE_ANGLE_THRESHOLD) {
+            if (directionState == FORWARD) {
+                correctionLeft();
+            }
+            else {
+                correctionRight();
+            }
+        }
+        // turning to the left
+        else if (gyro.getZ() < stableAngle - STABLE_ANGLE_THRESHOLD) {
+            if (directionState == FORWARD) {
+                correctionRight();
+            }
+            else {
+                correctionLeft();
+            }
+        }
+        else {
+            go();
+        }
+
         break;
 
         case ROTATING_LEFT:
+
         case ROTATING_RIGHT:
-        // turning operation completed
-        if (curTime > timeTurnCompleted) {
-            turningState = NOT_TURNING;
-            go(); // go straight w/ previous speed
-        }
+
         break;
 
-        case TURNING_LEFT:
-        case TURNING_RIGHT:
-        // don't update distance because we're just rotating in place
+        case CORRECTING_LEFT:
+
+        break;
+
+        case CORRECTING_RIGHT:
+
         break;
     }
 }
@@ -71,10 +103,10 @@ void Engine::update() {
 // engine is stopped
 boolean Engine::isStopped() {
     if (currentSpeed == 0) {
-      return true;
+        return true;
     }
     else {
-      return false;
+        return false;
     }
 }
 
@@ -93,7 +125,7 @@ boolean Engine::isTurning() {
 
 
 ///////////////////////
-// MOVEMENT COMMANDS //
+// STRAIGHT MOVEMENT //
 ///////////////////////
 
 
@@ -105,7 +137,7 @@ void Engine::setSpeed(int s) {
         // being stopped.
 
         // Here, we will just read a speed from 0-90 and use the
-        // currentDirection member variable to determine which direction to go
+        // directionState member variable to determine which direction to go
 
         // Note that the motors turn in opposite directions when mounted
         // on the chassis, so we account for that here by turning the
@@ -113,8 +145,9 @@ void Engine::setSpeed(int s) {
 
         turningState = NOT_TURNING;
         currentSpeed = s;
+        stableAngle = gyro.getZ();
 
-        switch (currentDirection) {
+        switch (directionState) {
 
             case FORWARD:
             rightMotor.write(90 + s);
@@ -134,8 +167,8 @@ void Engine::setSpeed(int s) {
 // set direction (forwards/backwards), keep speed
 void Engine::setDirection(DirectionState d) {
     // don't do anything if no change in direction
-    if (d != currentDirection) {
-        currentDirection = d;
+    if (d != directionState) {
+        directionState = d;
         setSpeed(currentSpeed); // same speed, opposite direction
     }
 }
@@ -176,10 +209,7 @@ void Engine::saveSpeed() {
 
 // robot rotates right in place at a predefined speed
 void Engine::rotateRight(double degrees) {
-    double radians = degrees * PI / 180.0;
-    double arcLength = CHASSIS_WIDTH / 2.0 * radians; // arc length wheels will travel
-    double deltaTime = arcLength / getVelocityForSpeed(ROTATE_SPEED);
-    timeTurnCompleted = millis() + (unsigned long)deltaTime;
+    finalTurnAngle = gyro.getZ();
 
     turningState = ROTATING_RIGHT;
     rightMotor.write(90 + ROTATE_SPEED); // forwards
@@ -189,14 +219,30 @@ void Engine::rotateRight(double degrees) {
 
 // robot rotates right in place
 void Engine::rotateLeft(double degrees) {
-    double radians = degrees * PI / 180.0;
-    double arcLength = CHASSIS_WIDTH / 2.0 * radians; // arc length wheels will travel
-    double deltaTime = arcLength / getVelocityForSpeed(ROTATE_SPEED);
-    timeTurnCompleted = millis() + (unsigned long)deltaTime;
+    finalTurnAngle = gyro.getZ();
 
     turningState = ROTATING_LEFT;
     rightMotor.write(90 - ROTATE_SPEED); // backwards
     leftMotor.write(90 - ROTATE_SPEED); // forwards
+}
+
+
+
+
+////////////////
+// CORRECTION //
+////////////////
+
+
+// speed up right wheel
+void Engine::correctionLeft() {
+    rightMotor.write(currentSpeed + CORRECTION_SPEED);
+}
+
+
+// speed up left wheel
+void Engine::correctionRight() {
+    leftMotor.write(currentSpeed + CORRECTION_SPEED);
 }
 
 

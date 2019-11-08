@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Sensor.h"
+#include "Gyro.h"
 
 #include <Servo.h>
 
@@ -10,6 +11,7 @@ void setup() {
     Serial.begin(9600);
     engine.initialize(7,8); // left,right
     sensor.initialize(12,13); // trig,echo
+
     engine.go(FORWARD, 45);
 }
 

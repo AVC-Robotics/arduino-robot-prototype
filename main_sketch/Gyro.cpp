@@ -4,8 +4,8 @@
 
 // Code largely taken from bit.ly/2PXP7Aw
 
-#include "Gyro.h"
 
+// MEMBER VARIABLES
 // const int MPU_ADDR = 0x68;
 // int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 // int minVal=265;
@@ -16,6 +16,14 @@
 // double roll;
 
 
+/*
+KNOWN BUGS
+-> needs to be reprogrammed to deal only with change in angles, rather than absolute angles
+
+*/
+
+
+#include "Gyro.h"
 
 // constructor
 Gyro::Gyro() {}

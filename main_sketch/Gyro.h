@@ -14,6 +14,7 @@ private:
     double x;
     double y;
     double z;
+
 //
 public:
     Gyro();
@@ -26,6 +27,8 @@ public:
     double getX();
     double getY();
     double getZ();
+
+    const double ANGLE_ERROR = 0.0;
 };
 
 #endif
