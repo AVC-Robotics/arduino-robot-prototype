@@ -1,5 +1,4 @@
 #include "Engine.h"
-#include <Arduino.h>
 
 // Engine
 // This class models the robot's left and right continuous servo motors,
