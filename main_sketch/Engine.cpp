@@ -77,15 +77,21 @@ void Engine::update() {
 
         break;
 
+
         case ROTATING_LEFT:
+
+        break;
+
 
         case ROTATING_RIGHT:
 
         break;
 
+
         case CORRECTING_LEFT:
 
         break;
+
 
         case CORRECTING_RIGHT:
 

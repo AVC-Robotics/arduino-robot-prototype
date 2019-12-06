@@ -2,14 +2,11 @@
 #define GYRO_H
 
 #include <Arduino.h>
-#include <Wire.h>
+#include <MPU9250.h>
 
 class Gyro {
 private:
-    const int MPU_ADDR = 0x68;
-    int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
-    int minVal=265;
-    int maxVal=402;
+
 
     double x;
     double y;
@@ -19,7 +16,7 @@ private:
 public:
     Gyro();
 
-    void initialize(int pinSDA, int pinSCL);
+    void initialize(int pinSDA, int pinSCL, double declination);
 
     void update();
 
@@ -28,7 +25,7 @@ public:
     double getY();
     double getZ();
 
-    const double ANGLE_ERROR = 0.0;
+    const double ANGLE_ERROR = 0.0; // determine experimentally
 };
 
 #endif

@@ -1,5 +1,5 @@
 // Gyro
-// This class interfaces with an MPU6050 3-axis gyroscope to get the angle
+// This class interfaces with an MPU9250 3-axis gyroscope to get the angle
 // displacement.
 
 // Code largely taken from bit.ly/2PXP7Aw
@@ -29,12 +29,10 @@ KNOWN BUGS
 Gyro::Gyro() {}
 
 
-void Gyro::initialize(int pinSDA, int pinSCL) {
-    Wire.begin();
-    Wire.beginTransmission(MPU_ADDR);
-    Wire.write(0x6B);
-    Wire.write(0);
-    Wire.endTransmission(true);
+void Gyro::initialize(int pinSDA, int pinSCL, double declination) {
+    // calibrate gyroscope
+    // magnetic declination in Lancaster, CA is +12.01 degrees
+
 }
 
 
